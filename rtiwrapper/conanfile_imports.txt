@@ -1,0 +1,27 @@
+[requires]
+Infrastructure.Minimal/1.0.21@Framework2.development/unstable
+DDSAddon/1.2.21@Framework2.development/unstable
+DDS/6.1.1@Framework2/Dependencies
+GeneratedDDS/1.0.25@Barak/unstable
+RtiConnectorPython/1.0.5@Barak/unstable
+
+[imports]
+bin, BarakGeneratedDds.dll -> .\dependencies
+bin, binary_parser.dll -> .\dependencies
+bin, boost_logger.dll -> .\dependencies
+bin, common_files.dll -> .\dependencies
+bin, curl_http_client.dll -> .\dependencies
+bin, dds_database.dll -> .\dependencies
+bin, ezframework.dll -> .\dependencies
+bin, libcurl.dll -> .\dependencies
+bin, memory_database.dll -> .\dependencies
+bin, nddsc.dll -> .\dependencies
+bin, nddscd.dll -> .\dependencies
+bin, nddscore.dll -> .\dependencies
+bin, nddscored.dll -> .\dependencies
+bin, nddscpp2.dll -> .\dependencies
+bin, nddscpp2d.dll -> .\dependencies
+bin, ports.dll -> .\dependencies
+bin, protocols.dll -> .\dependencies
+bin, RtiConnectorModule.dll -> .\dependencies
+bin, websocket_client.dll -> .\dependencies

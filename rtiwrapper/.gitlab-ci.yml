@@ -1,0 +1,28 @@
+# gitlab environment variables
+  # CI_COMMIT_REF_NAME - name of the branch the changes was committed to (source)
+  # CI_COMMIT_SHA - git head sha of the merge (source + target) NOT! committed until merged request it done!
+  # CI_MERGE_REQUEST_TARGET_BRANCH_NAME - name of the target branch on the merge request.
+
+variables:
+  JOB_NAME: "Landc4i_Dev/LAND/BARAK/MissionLayerEngines/RtiWrapper"
+
+
+stages:
+  - integrity-build
+  - build-deploy
+
+integrity-jenkins-trigger-job:
+  stage: integrity-build    
+  script:         
+   - ezdevops jenkins job run --job ${JOB_NAME} --param PROJECT_BRANCH=${CI_COMMIT_REF_NAME} --param PROJECT_COMMIT_SHA=${CI_COMMIT_SHA} --param MERGE_REQUEST_ID=${CI_MERGE_REQUEST_IID} --param DEPLOY=False
+  only:
+    - merge_requests
+  
+deploy:
+  stage: build-deploy
+  script:         
+    - ezdevops jenkins job run --job ${JOB_NAME} --param PROJECT_BRANCH=${CI_COMMIT_REF_NAME} --param DEPLOY=True
+  only:
+    - development
+    - master
+

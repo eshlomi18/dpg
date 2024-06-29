@@ -1,0 +1,14 @@
+{
+  "fusionAlgoPramsFilePath": "C:\\Users\\E013880\\source\\repos\\Barak\\fusionengine\\params.json",
+  "barakDataSet": "DE/RtiConnectorDataSet.xml",
+  "barakQosFilePath": "Configuration/BarakQosProfile.xml",
+  "commDefsDE": "127.0.0.1;38001;127.0.0.1;38002",
+  "identifiersFilePath": "Configuration/IdentifiersStore.xml",
+  "sourceIDTypeName": "MISSION_FUSION_AREA",
+  "recipientIDsTypeNames": ["MISSION_NOGA_FUSION", "NAMER_TACT_SENSOR", "BMS_SYSTEM"],
+   "aging" : "{\"seconds\":600,\"nanoseconds\":0}"
+
+}
+
+
+

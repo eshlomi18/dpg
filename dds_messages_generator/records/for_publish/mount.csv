@@ -1,0 +1,2 @@
+Type,Time,LocalTime,Name,Info,Additional Info
+DATA_BASE,10:55:24:832,10:15:08.130,C_Rot_Mount_Row,1 1 6 1693811639 455983000 1.98616755008698 0 0.011817941442132 0 0 0 0 1.98616755008698 P_Mount_PSM::L_ProcessState_OFF P_Mount_PSM::L_ProcessState_OFF 0 0 0 0 P_Mount_PSM::L_EnslavementMode_INDEPENDENT 0 0 0 P_Mount_PSM::L_MountWorkMode_OPER P_LDM_Common::L_OnOff_OFF P_Mount_PSM::L_StabilizationMode_MANUAL 0 0  ,

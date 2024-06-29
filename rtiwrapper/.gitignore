@@ -1,0 +1,7 @@
+*/.idea/*
+
+__pycache__/
+.idea/modules.xml
+.idea/rtiwrapper.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml

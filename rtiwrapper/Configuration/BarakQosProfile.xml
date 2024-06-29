@@ -1,0 +1,1706 @@
+<?xml version="1.0"?>
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="C:\Program Files\rti_connext_dds-6.1.1\resource\schema\rti_dds_qos_profiles.xsd"
+     version="6.1.1">
+
+	<!--BARAK QOS Version 1.0.0.19 -->
+
+	<qos_library name="Barak_Library">
+		<qos_profile name="Baseline_Profile" is_default_qos="true">
+			<participant_qos name="BaseParticipant">
+				<!--OtherDDSVendorCompatibility-->
+				<!-- <wire_protocol>
+          <rtps_auto_id_kind>RTPS_AUTO_ID_FROM_UUID</rtps_auto_id_kind>
+        </wire_protocol>  -->
+				<discovery_config>
+					<!--OtherDDSVendorCompatibility-->
+					<default_domain_announcement_period>
+						<sec>DURATION_INFINITE_SEC</sec>
+						<nanosec>DURATION_INFINITE_NSEC</nanosec>
+					</default_domain_announcement_period>
+					<publication_writer_publish_mode>
+						<kind>ASYNCHRONOUS_PUBLISH_MODE_QOS</kind>
+					</publication_writer_publish_mode>
+					<subscription_writer_publish_mode>
+						<kind>ASYNCHRONOUS_PUBLISH_MODE_QOS</kind>
+					</subscription_writer_publish_mode>
+					<!-- work around CORE-13104 -->
+					<publication_writer>
+						<multicast_resend_threshold>10</multicast_resend_threshold>
+					  </publication_writer>
+					  <subscription_writer>
+						<multicast_resend_threshold>10</multicast_resend_threshold>
+					  </subscription_writer>
+					<participant_liveliness_assert_period>
+						<sec>1</sec>
+						<nanosec>0</nanosec>
+					</participant_liveliness_assert_period>
+					<participant_liveliness_lease_duration>
+						<sec>4</sec>
+						<nanosec>0</nanosec>
+					</participant_liveliness_lease_duration>
+					<max_liveliness_loss_detection_period>
+						<sec>1</sec>
+						<nanosec>0</nanosec>
+					</max_liveliness_loss_detection_period>
+				</discovery_config>
+				<resource_limits>
+					<type_object_max_serialized_length>131072</type_object_max_serialized_length>
+					<type_code_max_serialized_length>0</type_code_max_serialized_length>
+					<contentfilter_property_max_length>2048</contentfilter_property_max_length>
+				</resource_limits>
+				<property>
+					<value>
+						<element>
+							<!--BacwardCompatiability-->
+							<name>dds.transport.use_510_compatible_locator_kinds</name>
+							<value>false</value>
+							<propagate>true</propagate>
+						</element>
+						<element>
+							<name>dds.transport.UDPv4.builtin.recv_socket_buffer_size</name>
+							<value>1048576</value>
+						</element>
+						<element>
+							<name>dds.transport.UDPv4.builtin.parent.message_size_max</name>
+							<value>1400</value>
+							<!-- 65530 -->
+						</element>
+						<element>
+							<name>dds.transport.UDPv4.builtin.send_socket_buffer_size</name>
+							<value>65530</value>
+						</element>
+						<!-- ignore sequence bounds (python to cpp)-->
+						<element>
+							<name>dds.type_consistency.ignore_sequence_bounds</name>
+							<value>1</value>
+						</element>
+						<element>
+							<!-- Work cross VLANs and cross networks support (defines the number of allowed ip hops) -->
+							<name>dds.transport.UDPv4.builtin.multicast_ttl</name>
+							<value>64</value>
+						</element>
+						<element>
+							<name>QOSVersion</name>
+							<value>1.0.0.19</value>
+							<propagate>true</propagate>
+						</element>
+						<element>
+							<name>dds.clock.internal_clock</name>
+							<value>monotonic,realtime</value>
+						</element>
+						<element>
+							<name>dds.clock.external_clock</name>
+							<value>monotonic,realtime</value>
+						</element>
+					</value>
+				</property>
+			</participant_qos>
+			<datareader_qos>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>Baseline_Profile</value>
+							<propagate>true</propagate>
+						</element>
+						<element>
+							<name>dds.data_reader.history.memory_manager.fast_pool.pool_buffer_max_size</name>
+							<value>4096</value>
+						</element>
+					</value>
+				</property>
+				<resource_limits>
+					<initial_samples>1</initial_samples>
+					<initial_instances>1</initial_instances>
+				</resource_limits>
+			</datareader_qos>
+			<datawriter_qos>
+				<publish_mode>
+					<kind>ASYNCHRONOUS_PUBLISH_MODE_QOS</kind>
+				</publish_mode>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>Baseline_Profile</value>
+							<propagate>true</propagate>
+						</element>
+						<element>
+							<name>dds.data_writer.history.memory_manager.fast_pool.pool_buffer_max_size</name>
+							<value>4096</value>
+						</element>
+					</value>
+				</property>
+				<resource_limits>
+					<initial_samples>1</initial_samples>
+					<initial_instances>1</initial_instances>
+				</resource_limits>
+			</datawriter_qos>
+		</qos_profile>
+
+		<qos_profile name="CommandPattern" base_name="Barak_Library::Baseline_Profile">
+			<datareader_qos>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>10</depth>
+				</history>
+				<durability>
+					<kind>VOLATILE_DURABILITY_QOS</kind>
+					<!-- should be TRANSIENT_LOCAL_DURABILITY_QOS ??-->
+				</durability>
+				<reliability>
+					<kind>RELIABLE_RELIABILITY_QOS</kind>
+				</reliability>
+
+				<!--     <destination_order>
+          <kind>BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS</kind>
+        </destination_order>-->
+			</datareader_qos>
+			<datawriter_qos>
+				<durability>
+					<kind>VOLATILE_DURABILITY_QOS</kind>
+					<!-- should be TRANSIENT_LOCAL_DURABILITY_QOS ??-->
+				</durability>
+				<reliability>
+					<kind>RELIABLE_RELIABILITY_QOS</kind>
+				</reliability>
+				<lifespan>
+					<duration>
+						<sec>2</sec>
+						<nanosec>0</nanosec>
+					</duration>
+				</lifespan>
+				<!--  <destination_order>
+          <kind>BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS</kind>
+        </destination_order>-->
+			</datawriter_qos>
+		</qos_profile>
+
+		<qos_profile name="ConfigurationSpecificationPattern"  base_name="Barak_Library::Baseline_Profile">
+			<datareader_qos>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>ConfigurationSpecificationPattern</value>
+							<propagate>true</propagate>
+						</element>
+					</value>
+				</property>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>2</depth>
+				</history>
+				<durability>
+					<kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+				</durability>
+				<reliability>
+					<kind>RELIABLE_RELIABILITY_QOS</kind>
+				</reliability>
+			</datareader_qos>
+			<datawriter_qos>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>ConfigurationSpecificationPattern</value>
+							<propagate>true</propagate>
+						</element>
+					</value>
+				</property>
+				<writer_data_lifecycle>
+					<autodispose_unregistered_instances>true</autodispose_unregistered_instances>
+				</writer_data_lifecycle>
+				<durability>
+					<kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+				</durability>
+				<reliability>
+					<kind>RELIABLE_RELIABILITY_QOS</kind>
+				</reliability>
+			</datawriter_qos>
+		</qos_profile>
+
+		<qos_profile name="ContinuousDataPattern"  base_name="Barak_Library::Baseline_Profile">
+			<datareader_qos>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>ContinuousDataPattern</value>
+							<propagate>true</propagate>
+						</element>
+					</value>
+				</property>
+				<reliability>
+					<kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+				</reliability>
+				<!-- <destination_order>
+          <kind>BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS</kind>
+        </destination_order>-->
+			</datareader_qos>
+			<datawriter_qos>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>100</depth>
+				</history>
+				<writer_data_lifecycle>
+					<autodispose_unregistered_instances>true</autodispose_unregistered_instances>
+				</writer_data_lifecycle>
+				<reliability>
+					<kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+				</reliability>
+				<!-- <destination_order>
+          <kind>BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS</kind>
+        </destination_order> -->
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>ContinuousDataPattern</value>
+							<propagate>true</propagate>
+						</element>
+					</value>
+				</property>
+				<!--TBD Per Endpoint Entity-->
+				<!--<deadline/>-->
+			</datawriter_qos>
+		</qos_profile>
+
+		<qos_profile name="StatePattern"  base_name="Barak_Library::Baseline_Profile">
+			<datareader_qos>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>StatePattern</value>
+							<propagate>true</propagate>
+						</element>
+					</value>
+				</property>
+				<durability>
+					<kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+				</durability>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<!--TBD Per Endpoint Entity-->
+					<!--<depth></depth>-->
+				</history>
+				<reliability>
+					<kind>RELIABLE_RELIABILITY_QOS</kind>
+				</reliability>
+				<!--   <destination_order>
+          <kind>BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS</kind>
+        </destination_order>-->
+			</datareader_qos>
+			<datawriter_qos>
+				<writer_data_lifecycle>
+					<autodispose_unregistered_instances>false</autodispose_unregistered_instances>
+				</writer_data_lifecycle>
+				<property>
+					<value>
+						<element>
+							<name>QOSName</name>
+							<value>StatePattern</value>
+							<propagate>true</propagate>
+						</element>
+					</value>
+				</property>
+				<durability>
+					<kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+				</durability>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<!--TBD Per Endpoint Entity-->
+					<!--<depth></depth>-->
+				</history>
+				<reliability>
+					<kind>RELIABLE_RELIABILITY_QOS</kind>
+				</reliability>
+				<!-- <destination_order>
+          <kind>BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS</kind>
+        </destination_order> -->
+			</datawriter_qos>
+		</qos_profile>
+
+		<qos_profile name="KeepAlivePattern" base_name="Barak_Library::Baseline_Profile">
+			<participant_qos name="KeepAliveParticipant">
+				<discovery_config>
+					<participant_liveliness_assert_period>
+						<sec>1</sec>
+						<nanosec>0</nanosec>
+					</participant_liveliness_assert_period>
+					<participant_liveliness_lease_duration>
+						<sec>4</sec>
+						<nanosec>0</nanosec>
+					</participant_liveliness_lease_duration>
+					<max_liveliness_loss_detection_period>
+						<sec>1</sec>
+						<nanosec>0</nanosec>
+					</max_liveliness_loss_detection_period>
+				</discovery_config>
+			</participant_qos>
+		</qos_profile>
+
+		<qos_profile name="Default" is_default_qos="true" is_default_participant_factory_profile="true">
+			<participant_factory_qos base_name="Baseline_Profile"/>
+			<participant_qos name="Participant" base_name="Baseline_Profile"/>
+			<publisher_qos  base_name="Baseline_Profile"/>
+			<subscriber_qos  base_name="Baseline_Profile"/>
+
+			<!--                                          P_Video_PSM                                              -->
+			<!--  C_Video_Source_Specification,C_Video_Routing_Specification,C_Video_Stream_Specification          -->
+			<datawriter_qos name="Video_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Source_Specification*">
+				<publication_name>
+					<name>Video_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Source_Specification*">
+				<subscription_name>
+					<name>Video_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Video_Routing_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Routing_Specification*">
+				<publication_name>
+					<name>Video_Routing_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_Routing_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Routing_Specification*">
+				<subscription_name>
+					<name>Video_Routing_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Video_Stream_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Specification*">
+				<publication_name>
+					<name>Video_Stream_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_Stream_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Specification*">
+				<subscription_name>
+					<name>Video_Stream_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_stream_zoom_spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Zoom_Support">
+				<publication_name>
+					<name>Video_stream_zoom_spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_stream_zoom_spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Zoom_Support">
+				<subscription_name>
+					<name>Video_stream_zoom_spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_stream_Level_spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Level_Support">
+				<publication_name>
+					<name>Video_stream_Level_spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_stream_Level_spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Level_Support">
+				<subscription_name>
+					<name>Video_stream_Level_spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Video_stream_Gain_spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Gain_Support">
+				<publication_name>
+					<name>Video_stream_Gain_spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_stream_Gain_spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Stream_Gain_Support">
+				<subscription_name>
+					<name>Video_stream_Gain_spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_stream_zoom_DW" base_name="StatePattern" topic_filter="*C_Zoom*">
+				<publication_name>
+					<name>Video_stream_zoom_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_stream_zoom_DR" base_name="StatePattern" topic_filter="*C_Zoom*">
+				<subscription_name>
+					<name>Video_stream_zoom_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_Stream_Relative_Position_DW" base_name="StatePattern" topic_filter="*C_Video_Stream_Relative_Position">
+				<publication_name>
+					<name>Video_Stream_Relative_Position_DW</name>
+				</publication_name>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>5</depth>
+				</history>
+			</datawriter_qos>
+			<datareader_qos name="Video_Stream_Relative_Position_DR" base_name="StatePattern" topic_filter="*C_Video_Stream_Relative_Position">
+				<subscription_name>
+					<name>Video_Stream_Relative_Position_DR</name>
+				</subscription_name>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>5</depth>
+				</history>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_Routing_DW" base_name="StatePattern" topic_filter="*C_Video_Routing">
+				<publication_name>
+					<name>Video_Routing_DW</name>
+				</publication_name>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>5</depth>
+				</history>
+			</datawriter_qos>
+			<datareader_qos name="Video_Routing_DR" base_name="StatePattern" topic_filter="*C_Video_Routing">
+				<subscription_name>
+					<name>Video_Routing_DR</name>
+				</subscription_name>
+				<history>
+					<kind>KEEP_LAST_HISTORY_QOS</kind>
+					<depth>5</depth>
+				</history>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_RTSP_DW" base_name="StatePattern" topic_filter="*C_Rtsp">
+				<publication_name>
+					<name>Video_RTSP_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_RTSP_DR" base_name="StatePattern" topic_filter="*C_Rtsp">
+				<subscription_name>
+					<name>Video_RTSP_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_Routing_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Video_Routing_Cmd">
+				<publication_name>
+					<name>Video_Routing_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_Routing_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Video_Routing_Cmd">
+				<subscription_name>
+					<name>Video_Routing_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoSetFov_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Zoom_SetFov_Cmd">
+				<publication_name>
+					<name>VideoSetFov_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoSetFov_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Zoom_SetFov_Cmd">
+				<subscription_name>
+					<name>VideoSetFov_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="VideoContZoom_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Zoom_SetContinuousZoom_Cmd">
+				<publication_name>
+					<name>VideoContZoom_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoContZoom_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Zoom_SetContinuousZoom_Cmd">
+				<subscription_name>
+					<name>VideoContZoom_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoFocus_Auto_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Focus_SetAutoState_Cmd">
+				<publication_name>
+					<name>VideoFocus_Auto_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoFocus_Auto_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Focus_SetAutoState_Cmd">
+				<subscription_name>
+					<name>VideoFocus_Auto_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoFocus_cont_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Focus_SetContinuousFocus_Cmd">
+				<publication_name>
+					<name>VideoFocus_cont_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoFocus_cont_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Focus_SetContinuousFocus_Cmd">
+				<subscription_name>
+					<name>VideoFocus_cont_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoFocus_next_focus_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Focus_NextFocus_Cmd">
+				<publication_name>
+					<name>VideoFocus_next_focus_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoFocus_next_focus_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Focus_NextFocus_Cmd">
+				<subscription_name>
+					<name>VideoFocus_next_focus_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoFocus_prev_focus_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Focus_PrevFocus_Cmd">
+				<publication_name>
+					<name>VideoFocus_prev_focus_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoFocus_prev_focus_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Focus_PrevFocus_Cmd">
+				<subscription_name>
+					<name>VideoFocus_prev_focus_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoFocus_sts_DW" base_name="StatePattern" topic_filter="*C_Focus">
+				<publication_name>
+					<name>VideoFocus_sts_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoFocus_sts_DR" base_name="StatePattern" topic_filter="*C_Focus">
+				<subscription_name>
+					<name>VideoFocus_sts_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoPolarity_sts_DW" base_name="StatePattern" topic_filter="*C_Polarity">
+				<publication_name>
+					<name>VideoPolarity_sts_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoPolarity_sts_DR" base_name="StatePattern" topic_filter="*C_Polarity">
+				<subscription_name>
+					<name>VideoPolarity_sts_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoLevel_sts_DW" base_name="StatePattern" topic_filter="*C_Level">
+				<publication_name>
+					<name>VideoLevel_sts_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoLevel_sts_DR" base_name="StatePattern" topic_filter="*C_Level">
+				<subscription_name>
+					<name>VideoLevel_sts_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoGain_sts_DW" base_name="StatePattern" topic_filter="*C_Gain">
+				<publication_name>
+					<name>VideoGain_sts_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoGain_sts_DR" base_name="StatePattern" topic_filter="*C_Gain">
+				<subscription_name>
+					<name>VideoGain_sts_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Fusion_DW" base_name="StatePattern" topic_filter="*C_Fusion">
+				<publication_name>
+					<name>Fusion_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Fusion_DR" base_name="StatePattern" topic_filter="*C_Fusion">
+				<subscription_name>
+					<name>Fusion_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Marker_Visible_Mode_DW" base_name="StatePattern" topic_filter="*C_Marker_Visible_Mode">
+				<publication_name>
+					<name>Marker_Visible_Mode_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Marker_Visible_Mode_DR" base_name="StatePattern" topic_filter="*C_Marker_Visible_Mode">
+				<subscription_name>
+					<name>Marker_Visible_Mode_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Level_SetAutoState_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Level_SetAutoState_Cmd">
+				<publication_name>
+					<name>Level_SetAutoState_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Level_SetAutoState_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Level_SetAutoState_Cmd">
+				<subscription_name>
+					<name>Level_SetAutoState_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Level_SetContinuousLevel_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Level_SetContinuousLevel_Cmd">
+				<publication_name>
+					<name>LLevel_SetContinuousLevel_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Level_SetContinuousLevel_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Level_SetContinuousLevel_Cmd">
+				<subscription_name>
+					<name>Level_SetContinuousLevel_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Level_NudgeLevel_DW" base_name="CommandPattern" topic_filter="*C_Level_NudgeLevel_Cmd">
+				<publication_name>
+					<name>Level_NudgeLevel_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Level_NudgeLevel_DR" base_name="CommandPattern" topic_filter="*C_Level_NudgeLevel_Cmd">
+				<subscription_name>
+					<name>Level_NudgeLevel_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Gain_SetAutoState_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Gain_SetAutoState_Cmd">
+				<publication_name>
+					<name>Gain_SetAutoState_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Gain_SetAutoState_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Gain_SetAutoState_Cmd">
+				<subscription_name>
+					<name>Gain_SetAutoState_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Gain_SetContinuousGain_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Gain_SetContinuousGain_Cmd">
+				<publication_name>
+					<name>Gain_SetContinuousGain_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Gain_SetContinuousGain_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Gain_SetContinuousGain_Cmd">
+				<subscription_name>
+					<name>Gain_SetContinuousGain_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Gain_NudgeGain_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Gain_NudgeGain_Cmd">
+				<publication_name>
+					<name>Gain_NudgeGain_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Gain_NudgeGain_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Gain_NudgeGain_Cmd">
+				<subscription_name>
+					<name>Gain_NudgeGain_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Polarity_Invert_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Polarity_InvertPolarity_Cmd">
+				<publication_name>
+					<name>Polarity_Invert_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Polarity_Invert_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Polarity_InvertPolarity_Cmd">
+				<subscription_name>
+					<name>Polarity_Invert_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Fusion_turnOff_DW" base_name="CommandPattern" topic_filter="*C_Fusion_TurnOff_Cmd">
+				<publication_name>
+					<name>Fusion_turnOff_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Fusion_turnOff_DR" base_name="CommandPattern" topic_filter="*C_Fusion_TurnOff_Cmd">
+				<subscription_name>
+					<name>Fusion_turnOff_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Fusion_turnOn_DW" base_name="CommandPattern" topic_filter="*C_Fusion_TurnOn_Cmd">
+				<publication_name>
+					<name>Fusion_turnOn_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Fusion_turnOn_DR" base_name="CommandPattern" topic_filter="*C_Fusion_TurnOn_Cmd">
+				<subscription_name>
+					<name>Fusion_turnOn_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Marker_Visible_TurnOn_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Marker_Visible_TurnOn_Cmd">
+				<publication_name>
+					<name>Marker_Visible_TurnOn_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Marker_Visible_TurnOn_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Marker_Visible_TurnOn_Cmd">
+				<subscription_name>
+					<name>Marker_Visible_TurnOn_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Marker_Visible_TurnOff_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Marker_Visible_TurnOff_Cmd">
+				<publication_name>
+					<name>Marker_Visible_TurnOff_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Marker_Visible_TurnOff_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Marker_Visible_TurnOff_Cmd">
+				<subscription_name>
+					<name>Marker_Visible_TurnOff_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="ReticleColorControl_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Reticle_Color_Control_Cmd">
+				<publication_name>
+					<name>ReticleColorControl_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="ReticleColorControl_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Reticle_Color_Control_Cmd">
+				<subscription_name>
+					<name>ReticleColorControl_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Emphasis_NextEmphasis_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Emphasis_NextEmphasis_Cmd">
+				<publication_name>
+					<name>Emphasis_NextEmphasis_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Emphasis_NextEmphasis_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Emphasis_NextEmphasis_Cmd">
+				<subscription_name>
+					<name>Emphasis_NextEmphasis_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Emphasis_PrevEmphasis_DW" base_name="CommandPattern" topic_filter="*C_Emphasis_PrevEmphasis_Cmd">
+				<publication_name>
+					<name>Emphasis_PrevEmphasis_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Emphasis_PrevEmphasis_DR" base_name="CommandPattern" topic_filter="*C_Emphasis_PrevEmphasis_Cmd">
+				<subscription_name>
+					<name>Emphasis_PrevEmphasis_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Emphasis_NeutralEmphasis_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Emphasis_NeutralEmphasis_Cmd">
+				<publication_name>
+					<name>Emphasis_NeutralEmphasis_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Emphasis_NeutralEmphasis_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Emphasis_NeutralEmphasis_Cmd">
+				<subscription_name>
+					<name>Emphasis_NeutralEmphasis_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_Source_TurnVideoOn_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Video_Source_TurnVideoOn_Cmd">
+				<publication_name>
+					<name>Video_Source_TurnVideoOn_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_Source_TurnVideoOn_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Video_Source_TurnVideoOn_Cmd">
+				<subscription_name>
+					<name>Video_Source_TurnVideoOn_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Video_Source_TurnVideoOff_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Video_Source_TurnVideoOff_Cmd">
+				<publication_name>
+					<name>Video_Source_TurnVideoOff_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Video_Source_TurnVideoOff_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Video_Source_TurnVideoOff_Cmd">
+				<subscription_name>
+					<name>Video_Source_TurnVideoOff_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Emphasis_DW" base_name="StatePattern" topic_filter="*C_Emphasis">
+				<publication_name>
+					<name>Emphasis_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Emphasis_DR" base_name="StatePattern" topic_filter="*C_Emphasis">
+				<subscription_name>
+					<name>Emphasis_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Touch_Focus_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Touch_Focus_Cmd">
+				<publication_name>
+					<name>Set_Touch_Focus_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Touch_Focus_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Touch_Focus_Cmd">
+				<subscription_name>
+					<name>Set_Touch_Focus_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_VideoTracking_PSM                                                -->
+			<datawriter_qos name="VideoTracker_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Tracker_Specification">
+				<publication_name>
+					<name>VideoTracker_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoTracker_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Video_Tracker_Specification*">
+				<subscription_name>
+					<name>VideoTracker_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoTracker_DW" base_name="StatePattern" topic_filter="*C_Video_Tracker">
+				<publication_name>
+					<name>VideoTracker_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoTracker_DR" base_name="StatePattern" topic_filter="*C_Video_Tracker">
+				<subscription_name>
+					<name>VideoTracker_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoTracker_StartLeadOnAtCenter_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Video_Tracker_StartLeadOn_Cmd">
+				<publication_name>
+					<name>VideoTracker_StartLeadOnAtCenter_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoTracker_StartLeadOnAtCenter_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Video_Tracker_StartLeadOn_Cmd">
+				<subscription_name>
+					<name>VideoTracker_StartLeadOnAtCenter_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="VideoTracker_StopLeadOnAtCenter_Cmd_DW" base_name="StatePattern" topic_filter="*C_Video_Tracker_StopLeadOn_Cmd">
+				<publication_name>
+					<name>VideoTracker_StopLeadOnAtCenter_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="VideoTracker_StopLeadOnAtCenter_Cmd_DR" base_name="StatePattern" topic_filter="*C_Video_Tracker_StopLeadOn_Cmd">
+				<subscription_name>
+					<name>VideoTracker_StopLeadOnAtCenter_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Maintenance_PSM                                                -->
+			<datawriter_qos name="Resource_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Resource_Specification*">
+				<publication_name>
+					<name>Resource_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Resource_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Resource_Specification*">
+				<subscription_name>
+					<name>Resource_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Error_Report_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Error_Report">
+				<publication_name>
+					<name>Error_Report_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Error_Report_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Error_Report*">
+				<subscription_name>
+					<name>Error_Report_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="SystemTime_Update_DW" base_name="StatePattern" topic_filter="*C_SystemTime_Update">
+				<publication_name>
+					<name>SystemTime_Update_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="SystemTime_Update_DR" base_name="StatePattern" topic_filter="*C_SystemTime_Update">
+				<subscription_name>
+					<name>SystemTime_Update_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Alert_Report_DW" base_name="StatePattern" topic_filter="*C_Alert_Report">
+				<publication_name>
+					<name>C_Alert_Report_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Alert_Report_DR" base_name="StatePattern" topic_filter="*C_Alert_Report">
+				<subscription_name>
+					<name>C_Alert_Report_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="System_State_DW" base_name="StatePattern" topic_filter="*C_System_State">
+				<publication_name>
+					<name>C_System_State_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="System_State_DR" base_name="StatePattern" topic_filter="*C_System_State">
+				<subscription_name>
+					<name>C_System_State_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="AlertAck_Cmd_DW" base_name="CommandPattern" topic_filter="*C_AlertAck_Cmd">
+				<publication_name>
+					<name>AlertAck_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="AlertAck_Cmd_DR" base_name="CommandPattern" topic_filter="*C_AlertAck_Cmd">
+				<subscription_name>
+					<name>AlertAck_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_HIDs                                                -->			
+			<datawriter_qos name="HID_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_HID_Specification*">
+				<publication_name>
+					<name>HID_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="HID_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_HID_Specification*">
+				<subscription_name>
+					<name>HID_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="JS_Raw_DW" base_name="ContinuousDataPattern" topic_filter="*C_Joysticks_Raw_Status*">
+				<publication_name>
+					<name>JS_Raw_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="JS_Raw_DR" base_name="ContinuousDataPattern" topic_filter="*C_Joysticks_Raw_Status*">
+				<subscription_name>
+					<name>JS_Raw_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="HID_Buttons_DW" base_name="StatePattern" topic_filter="*C_HID_Switches_Status*">
+				<publication_name>
+					<name>HID_Buttons_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="HID_Buttons_DR" base_name="StatePattern" topic_filter="*C_HID_Switches_Status*">
+				<subscription_name>
+					<name>HID_Buttons_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Mount_PSM                                                -->
+			<datawriter_qos name="Mount_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Mount_Specification*">
+				<publication_name>
+					<name>Mount_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Mount_Specification*">
+				<subscription_name>
+					<name>Mount_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Mount_bringtoPreset_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringToPreset_Cmd*">
+				<publication_name>
+					<name>Mount_bringtoPreset_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_bringtoPreset_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringToPreset_Cmd*">
+				<subscription_name>
+					<name>Mount_bringtoPreset_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_bringtoCyclic_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringToCyclic_Cmd*">
+				<publication_name>
+					<name>Mount_bringtoCyclic_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_bringtoCyclic_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringToCyclic_Cmd*">
+				<subscription_name>
+					<name>Mount_bringtoCyclic_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_bringto_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringTo_Cmd*">
+				<publication_name>
+					<name>Mount_bringto_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_bringto_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringTo_Cmd*">
+				<subscription_name>
+					<name>Mount_bringto_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_bringtoRelative_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringToRelative_Cmd*">
+				<publication_name>
+					<name>Mount_bringtoRelative_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_bringtoRelative_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_BringToRelative_Cmd*">
+				<subscription_name>
+					<name>Mount_bringtoRelative_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_Enslavecmd_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_EnslaveTo_Cmd*">
+				<publication_name>
+					<name>Mount_Enslavecmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_Enslavecmd_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_EnslaveTo_Cmd*">
+				<subscription_name>
+					<name>Mount_Enslavecmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_startScan_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_StartScanning_Cmd*">
+				<publication_name>
+					<name>Mount_startScan_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_startScan_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_StartScanning_Cmd*">
+				<subscription_name>
+					<name>Mount_startScan_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_stopScan_DW" base_name="CommandPattern" topic_filter="*C_Rot_Mount_StopScanning_Cmd*">
+				<publication_name>
+					<name>Mount_stopScan_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_stopScan_DR" base_name="CommandPattern" topic_filter="*C_Rot_Mount_StopScanning_Cmd*">
+				<subscription_name>
+					<name>Mount_stopScan_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_status_DW" base_name="StatePattern" topic_filter="*C_Rot_Mount*">
+				<publication_name>
+					<name>Mount_status_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_status_DR" base_name="StatePattern" topic_filter="*C_Rot_Mount*">
+				<subscription_name>
+					<name>Mount_status_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Mount_Index_status_DW" base_name="StatePattern" topic_filter="*C_Rot_Mount_Index*">
+				<publication_name>
+					<name>Mount_Index_status_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mount_Index_status_DR" base_name="StatePattern" topic_filter="*C_Rot_Mount_Index*">
+				<subscription_name>
+					<name>Mount_Index_status_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Tactical_Effector_PSM                                                -->
+			<datawriter_qos name="Tactical_Effector_spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Tactical_Effector_Specification*">
+				<publication_name>
+					<name>Tactical_Effector_spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Effector_spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Tactical_Effector_Specification*">
+				<subscription_name>
+					<name>Tactical_Effector_spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Effector_DW" base_name="StatePattern" topic_filter="*C_Tactical_Effector">
+				<publication_name>
+					<name>Tactical_Effector_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Effector_DR" base_name="StatePattern" topic_filter="*C_Tactical_Effector">
+				<subscription_name>
+					<name>Tactical_Effector_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Tactical_Effector_Enable_DW" base_name="CommandPattern" topic_filter="*C_Tactical_Effector_Enable_Cmd*">
+				<publication_name>
+					<name>Tactical_Effector_Enable_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Effector_Enable_DR" base_name="CommandPattern" topic_filter="*C_Tactical_Effector_Enable_Cmd*">
+				<subscription_name>
+					<name>Tactical_Effector_Enable_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Tactical_Effector_Disable_DW" base_name="CommandPattern" topic_filter="*C_Tactical_Effector_Disable_Cmd">
+				<publication_name>
+					<name>Tactical_Effector_Disable_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Effector_Disable_DR" base_name="CommandPattern" topic_filter="*C_Tactical_Effector_Disable_Cmd">
+				<subscription_name>
+					<name>Tactical_Effector_Disable_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Weapon_PSM                                                -->
+			<datawriter_qos name="Weapon_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Weapon_Specification*">
+				<publication_name>
+					<name>Weapon_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Weapon_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Weapon_Specification*">
+				<subscription_name>
+					<name>Weapon_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			
+			<datawriter_qos name="Weapon_Loader_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Weapon_Loader_Specification*">
+				<publication_name>
+					<name>Weapon_Loader_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Weapon_Loader_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Weapon_Loader_Specification*">
+				<subscription_name>
+					<name>Weapon_Loader_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>			
+			
+			<datawriter_qos name="Weapon_DW" base_name="StatePattern" topic_filter="*C_Weapon">
+				<publication_name>
+					<name>Weapon_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Weapon_DR" base_name="StatePattern" topic_filter="*C_Weapon">
+				<subscription_name>
+					<name>Weapon_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="FireSemiCorrection_DW" base_name="StatePattern" topic_filter="*C_FireSemiCorrection">
+				<publication_name>
+					<name>FireSemiCorrection_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="FireSemiCorrection_DR" base_name="StatePattern" topic_filter="*C_FireSemiCorrection">
+				<subscription_name>
+					<name>FireSemiCorrection_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			
+			<datawriter_qos name="FireHotCorrection_DW" base_name="StatePattern" topic_filter="*C_FireHotCorrection">
+				<publication_name>
+					<name>FireHotCorrection_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="FireHotCorrection_DR" base_name="StatePattern" topic_filter="*C_FireHotCorrection">
+				<subscription_name>
+					<name>FireHotCorrection_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Fire_Event_DW" base_name="StatePattern" topic_filter="*C_Fire_Event">
+				<publication_name>
+					<name>Fire_Event_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Fire_Event_DR" base_name="StatePattern" topic_filter="*C_Fire_Event">
+				<subscription_name>
+					<name>Fire_Event_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Weapon_Loaders_DW" base_name="StatePattern" topic_filter="*C_Weapon_Loaders">
+				<publication_name>
+					<name>Weapon_Loaders_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Weapon_Loaders_DR" base_name="StatePattern" topic_filter="*C_Weapon_Loaders">
+				<subscription_name>
+					<name>Weapon_Loaders_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Balistic_Parameters_DW" base_name="StatePattern" topic_filter="*C_Balistic_Parameters">
+				<publication_name>
+					<name>Balistic_Parameters_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Balistic_Parameters_DR" base_name="StatePattern" topic_filter="*C_Balistic_Parameters">
+				<subscription_name>
+					<name>Balistic_Parameterss_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Ramp_Position_DW" base_name="StatePattern" topic_filter="*C_Ramp_Position">
+				<publication_name>
+					<name>Ramp_Position_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Ramp_Position_DR" base_name="StatePattern" topic_filter="*C_Ramp_Position">
+				<subscription_name>
+					<name>Ramp_Position_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="AmmunitionList_DW" base_name="StatePattern" topic_filter="*C_AmmunitionList">
+				<publication_name>
+					<name>AmmunitionList_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="AmmunitionList_DR" base_name="StatePattern" topic_filter="*C_AmmunitionList">
+				<subscription_name>
+					<name>AmmunitionList_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Fire_Series_DW" base_name="StatePattern" topic_filter="*C_Fire_Series">
+				<publication_name>
+					<name>Fire_Series_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Fire_Series_DR" base_name="StatePattern" topic_filter="*C_Fire_Series">
+				<subscription_name>
+					<name>Fire_Series_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="FireEvent_Shell_DW" base_name="StatePattern" topic_filter="*C_FireEvent_Shell">
+				<publication_name>
+					<name>FireEvent_Shell_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="FireEvent_Shell_DR" base_name="StatePattern" topic_filter="*C_FireEvent_Shell">
+				<subscription_name>
+					<name>FireEvent_Shell_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="FireSemiCorrection_Cmd_DW" base_name="CommandPattern" topic_filter="*C_FireSemiCorrection_Cmd">
+				<publication_name>
+					<name>FireSemiCorrection_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="FireSemiCorrection_Cmd_DR" base_name="CommandPattern" topic_filter="*C_FireSemiCorrection_Cmd">
+				<subscription_name>
+					<name>FireSemiCorrection_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="FireHotCorrection_Cmd_DW" base_name="CommandPattern" topic_filter="*C_FireHotCorrection_Cmd">
+				<publication_name>
+					<name>FireHotCorrection_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="FireHotCorrection_Cmd_DR" base_name="CommandPattern" topic_filter="*C_FireHotCorrection_Cmd">
+				<subscription_name>
+					<name>FireHotCorrection_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="SetAmmunition_Cmd_DW" base_name="CommandPattern" topic_filter="*C_SetAmmunition_Cmd">
+				<publication_name>
+					<name>SetAmmunition_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="SetAmmunition_Cmd_DR" base_name="CommandPattern" topic_filter="*C_SetAmmunition_Cmd">
+				<subscription_name>
+					<name>SetAmmunition_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="SetAmmuntionList_Cmd_DW" base_name="CommandPattern" topic_filter="*C_SetAmmuntionList_Cmd">
+				<publication_name>
+					<name>SetAmmuntionList_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="SetAmmuntionList_Cmd_DR" base_name="CommandPattern" topic_filter="*C_SetAmmuntionList_Cmd">
+				<subscription_name>
+					<name>SetAmmuntionList_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Firing_Type_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Firing_Type_Cmd">
+				<publication_name>
+					<name>Set_Firing_Type_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Firing_Type_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Firing_Type_Cmd">
+				<subscription_name>
+					<name>Set_Firing_Type_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Burst_Length_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Burst_Length_Cmd">
+				<publication_name>
+					<name>Set_Burst_Length_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Burst_Length_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Burst_Length_Cmd">
+				<subscription_name>
+					<name>Set_Burst_Length_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Projectiles_Rate_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Projectiles_Rate_Cmd">
+				<publication_name>
+					<name>Set_Projectiles_Rate_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Projectiles_Rate_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Projectiles_Rate_Cmd">
+				<subscription_name>
+					<name>Set_Projectiles_Rate_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Ammunition_Loader_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Ammunition_Loader_Cmd">
+				<publication_name>
+					<name>Set_Ammunition_Loader_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Ammunition_Loader_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Ammunition_Loader_Cmd">
+				<subscription_name>
+					<name>Set_Ammunition_Loader_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Balistic_Parameters_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Balistic_Parameters_Cmd">
+				<publication_name>
+					<name>Set_Balistic_Parameters_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Balistic_Parameters_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Balistic_Parameters_Cmd">
+				<subscription_name>
+					<name>Set_Balistic_Parameters_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_GunJump_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_GunJump_Cmd">
+				<publication_name>
+					<name>Set_GunJump_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_GunJump_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_GunJump_Cmd">
+				<subscription_name>
+					<name>Set_GunJump_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Ballistic_Compensation_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Ballistic_Compensation_Cmd">
+				<publication_name>
+					<name>Set_Ballistic_Compensation_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Ballistic_Compensation_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Ballistic_Compensation_Cmd">
+				<subscription_name>
+					<name>Set_Ballistic_Compensation_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Weapon_Base_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Weapon_Base_Cmd">
+				<publication_name>
+					<name>Weapon_Base_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Weapon_Base_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Weapon_Base_Cmd">
+				<subscription_name>
+					<name>Weapon_Base_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Enter_Ramp_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Enter_Ramp_Cmd">
+				<publication_name>
+					<name>Enter_Ramp_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Enter_Ramp_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Enter_Ramp_Cmd">
+				<subscription_name>
+					<name>Enter_Ramp_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_Ammuntion_List_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_Ammuntion_List_Cmd">
+				<publication_name>
+					<name>Set_Ammuntion_List_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_Ammuntion_List_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_Ammuntion_List_Cmd">
+				<subscription_name>
+					<name>Set_Ammuntion_List_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="Set_FCS_Computing_Mode_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Set_FCS_Computing_Mode_Cmd">
+				<publication_name>
+					<name>Set_FCS_Computing_Mode_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Set_FCS_Computing_Mode_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Set_FCS_Computing_Mode_Cmd">
+				<subscription_name>
+					<name>Set_FCS_Computing_Mode_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+		
+
+			<!--                                          P_LRF_PSM                                                -->
+			<datawriter_qos name="LRF_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_LRF_Specification*">
+				<publication_name>
+					<name>LRF_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_LRF_Specification*">
+				<subscription_name>
+					<name>LRF_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="LRF_DW" base_name="StatePattern" topic_filter="*C_LRF*">
+				<publication_name>
+					<name>LRF_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_DR" base_name="StatePattern" topic_filter="*C_LRF*">
+				<subscription_name>
+					<name>LRF_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="LRF_Measurement_DW" base_name="StatePattern" topic_filter="*C_LRF_Measurement">
+				<publication_name>
+					<name>LRF_Measurement_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_Measurement_DR" base_name="StatePattern" topic_filter="*C_LRF_Measurement">
+				<subscription_name>
+					<name>LRF_Measurement_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="LRF_Measurement_Extended_DW" base_name="StatePattern" topic_filter="*C_LRF_Measurement_Extended">
+				<publication_name>
+					<name>LRF_Measurement_Extended_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_Measurement_Extended_DR" base_name="StatePattern" topic_filter="*C_LRF_Measurement_Extended">
+				<subscription_name>
+					<name>LRF_Measurement_Extended_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<datawriter_qos name="LRF_SetRangeType_Cmd_DW" base_name="CommandPattern" topic_filter="*C_LRF_SetRangeType_Cmd*">
+				<publication_name>
+					<name>LRF_SetRangeType_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_SetRangeType_Cmd_DR" base_name="CommandPattern" topic_filter="*C_LRF_SetRangeType_Cmd*">
+				<subscription_name>
+					<name>LRF_SetRangeType_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="LRF_StartFiring_Cmd_DW" base_name="CommandPattern" topic_filter="*C_LRF_StartFiringLaser_Cmd*">
+				<publication_name>
+					<name>LRF_StartFiring_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_StartFiring_Cmd_DR" base_name="CommandPattern" topic_filter="*C_LRF_StartFiringLaser_Cmd*">
+				<subscription_name>
+					<name>LRF_StartFiring_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="LRF_StopFiring_Cmd_DW" base_name="CommandPattern" topic_filter="*C_LRF_StopFiringLaser_Cmd*">
+				<publication_name>
+					<name>LRF_StopFiring_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="LRF_StopFiring_Cmd_DR" base_name="CommandPattern" topic_filter="*C_LRF_StopFiringLaser_Cmd*">
+				<subscription_name>
+					<name>LRF_StopFiring_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Navigation_PSM                                                -->
+			<datawriter_qos name="Position_DW" base_name="ContinuousDataPattern" topic_filter="*C_Position*">
+				<publication_name>
+					<name>Position_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Position_DR" base_name="ContinuousDataPattern" topic_filter="*C_Position*">
+				<subscription_name>
+					<name>Position_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Heading_DW" base_name="ContinuousDataPattern" topic_filter="*C_Heading*">
+				<publication_name>
+					<name>Heading_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Heading_DR" base_name="ContinuousDataPattern" topic_filter="*C_Heading*">
+				<subscription_name>
+					<name>Heading_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Mobility_DW" base_name="StatePattern" topic_filter="*C_Platform_Mobility_State*">
+				<publication_name>
+					<name>Mobility_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Mobility_DR" base_name="StatePattern" topic_filter="*C_Platform_Mobility_State*">
+				<subscription_name>
+					<name>Mobility_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="GPS_Receiver_DW" base_name="StatePattern" topic_filter="*C_GPS_Receiver*">
+				<publication_name>
+					<name>GPS_Receiver_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="GPS_Receiver_DR" base_name="StatePattern" topic_filter="*C_GPS_Receiver*">
+				<subscription_name>
+					<name>GPS_Receiver_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			
+
+			<!--                                          P_Platform_PSM                                                -->
+			<datawriter_qos name="Platform_Peripherial_DW" base_name="StatePattern" topic_filter="*C_Platform_Peripherial*">
+				<publication_name>
+					<name>Platform_Peripherial_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Platform_Peripherial_DR" base_name="StatePattern" topic_filter="*C_Platform_Peripherial*">
+				<subscription_name>
+					<name>Platform_Peripherial_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Platform_State_DW" base_name="StatePattern" topic_filter="*C_Platform_State*">
+				<publication_name>
+					<name>Platform_State_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Platform_State_DR" base_name="StatePattern" topic_filter="*C_Platform_State*">
+				<subscription_name>
+					<name>Platform_State_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Platform_Combat_Status_DW" base_name="StatePattern" topic_filter="*C_Platform_Combat_Status*">
+				<publication_name>
+					<name>Platform_Combat_Status_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Platform_Combat_Status_DR" base_name="StatePattern" topic_filter="*C_Platform_Combat_Status*">
+				<subscription_name>
+					<name>Platform_Combat_Status_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Force_Manual_Control_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Force_Manual_Control_Cmd*">
+				<publication_name>
+					<name>Force_Manual_Control_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Force_Manual_Control_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Force_Manual_Control_Cmd*">
+				<subscription_name>
+					<name>Force_Manual_Control_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Platform_Systems_PSM                                                -->
+			<datawriter_qos name="Platform_system_DW" base_name="StatePattern" topic_filter="*C_PlatformSystem">
+				<publication_name>
+					<name>Platform_system_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Platform_system_DR" base_name="StatePattern" topic_filter="*C_PlatformSystem">
+				<subscription_name>
+					<name>Platform_system_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Platform_system_Spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_PlatformSystem_Specification">
+				<publication_name>
+					<name>Platform_system_Spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Platform_system_Spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_PlatformSystem_Specification">
+				<subscription_name>
+					<name>Platform_system_Spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="PlatformSystem_Set_State_Cmd_DW" base_name="CommandPattern" topic_filter="*C_PlatformSystem_Set_State_Cmd*">
+				<publication_name>
+					<name>PlatformSystem_Set_State_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="PlatformSystem_Set_State_Cmd_DR" base_name="CommandPattern" topic_filter="*C_PlatformSystem_Set_State_Cmd*">
+				<subscription_name>
+					<name>PlatformSystem_Set_State_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!--                                          P_Tactical_Sensor_PSM                                                -->
+			<datawriter_qos name="Tactical_Sensor_spec_DW" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Tactical_Sensor_Specification*">
+				<publication_name>
+					<name>Tactical_Sensor_spec_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_spec_DR" base_name="ConfigurationSpecificationPattern" topic_filter="*C_Tactical_Sensor_Specification*">
+				<subscription_name>
+					<name>Tactical_Sensor_spec_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Sensor_DW" base_name="StatePattern" topic_filter="*C_Tactical_Sensor">
+				<publication_name>
+					<name>Tactical_Sensor_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_DR" base_name="StatePattern" topic_filter="*C_Tactical_Sensor">
+				<subscription_name>
+					<name>Tactical_Sensor_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Sensor_Video_DW" base_name="StatePattern" topic_filter="*C_Tactical_Sensor_Video">
+				<publication_name>
+					<name>Tactical_Sensor_Video_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_Video_DR" base_name="StatePattern" topic_filter="*C_Tactical_Sensor_Video">
+				<subscription_name>
+					<name>Tactical_Sensor_Video_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			
+			<datawriter_qos name="Detection_Split_DW" base_name="StatePattern" topic_filter="*C_Detection_Split">
+				<publication_name>
+					<name>Detection_Split_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Detection_Split_DR" base_name="StatePattern" topic_filter="*C_Detection_Split">
+				<subscription_name>
+					<name>Detection_Split_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Sensor_Enable_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_Enable_Cmd">
+				<publication_name>
+					<name>Tactical_Sensor_Enable_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_Enable_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_Enable_Cmd">
+				<subscription_name>
+					<name>Tactical_Sensor_Enable_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Sensor_Disable_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_Disable_Cmd">
+				<publication_name>
+					<name>Tactical_Sensor_Disable_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_Disable_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_Disable_Cmd">
+				<subscription_name>
+					<name>Tactical_Sensor_Disable_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Sensor_AssignStream_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_AssignVideoStream_Cmd">
+				<publication_name>
+					<name>Tactical_Sensor_AssignStream_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_AssignStream_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_AssignVideoStream_Cmd">
+				<subscription_name>
+					<name>Tactical_Sensor_AssignStream_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+			<datawriter_qos name="Tactical_Sensor_Sector_Cmd_DW" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_Sector_Cmd">
+				<publication_name>
+					<name>Tactical_Sensor_Sector_Cmd_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Tactical_Sensor_Sector_Cmd_DR" base_name="CommandPattern" topic_filter="*C_Tactical_Sensor_Sector_Cmd">
+				<subscription_name>
+					<name>Tactical_Sensor_Sector_Cmd_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+			<!-- Case no official topic qos defined -->
+			<datawriter_qos name="Default_DW" base_name="Baseline_Profile" topic_filter="*">
+				<publication_name>
+					<name>Default_DW</name>
+				</publication_name>
+			</datawriter_qos>
+			<datareader_qos name="Default_DR" base_name="Baseline_Profile" topic_filter="*">
+				<subscription_name>
+					<name>Default_DR</name>
+				</subscription_name>
+			</datareader_qos>
+
+		</qos_profile>
+	</qos_library>
+</dds>
